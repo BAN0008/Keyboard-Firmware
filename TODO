@@ -2,3 +2,4 @@ Ensure correct functionality when the layer is changed while a key is held
 Ensure that the keycode 0x0 isn't used for anything
 Add debouncing algorithm
 Make stuff const
+Test debug error colouring
