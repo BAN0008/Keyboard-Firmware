@@ -30,12 +30,13 @@ const uint8_t column_pins[COLUMNS] = {4, 5, 6};
 ### Layers
 There must be at least one layer for the keyboard to function.
 |Tag               |Description|
-|------------------|-----------|
+| ---------------- | --------- |
 |[LAYER_NAME]      |Name of the layer(can't contain spaces)|
-|[LAYER_PRIORITY]  |Number above 0. Makes the layer override other enabled layers with a higher priority value
-|[KEY_KEYCODE]     |Keycode sent when the key is pressed. See [Keycodes](#Keycodes)(Use `0x0` for keys that shouldn't directly send anything)
-|[KEY_FUNCTION]    |Address of function called when key pressed/released. Use `NULL` for normal keys(used for macros and layer changing)
-Layers are defined in the following format
+|[LAYER_PRIORITY]  |Number above 0. Makes the layer override other enabled layers with a higher priority value|
+|[KEY_KEYCODE]     |Keycode sent when the key is pressed. See [Keycodes](#keycodes)(Use `0x0` for keys that shouldn't directly send anything)|
+|[KEY_FUNCTION]    |Address of function called when key pressed/released. Use `NULL` for normal keys(used for macros and layer changing)    |
+
+Layers are defined in the following format 
 ```c
 //firmware.ino
 /*
