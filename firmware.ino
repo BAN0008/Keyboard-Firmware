@@ -24,7 +24,7 @@ void setup()
 	}
 
 	//Populate `currentKeymap`
-	struct layer *temp[1] = {&normal};
+	struct layer *temp[1] = {&layer_default};
 	generate_keymap(temp);
 
 	#ifdef STARTUP_DELAY

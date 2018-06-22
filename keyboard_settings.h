@@ -9,14 +9,14 @@
 #include <stdlib.h>
 #include "keymap.h"
 
-extern uint8_t row_pins[ROWS];
-extern uint8_t column_pins[COLUMNS];
+extern const uint8_t row_pins[ROWS];
+extern const uint8_t column_pins[COLUMNS];
 
 //Uncomment the below line if the keyboard is occasionally not recognized
 //#define STARTUP_DELAY 2500
 
 //Define Layers Here
 //Example Layer
-extern struct layer normal;
+extern struct layer layer_default;
 
 #endif //KEYBOARD_SETTINGS_H
