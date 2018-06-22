@@ -14,7 +14,7 @@ void generate_keymap(struct layer *layers[])
 	while (!done)
 	{
 		swaps = 0;
-		for (uint8_t i = 0; i < sizeof(*layers) - 1; i++)
+		for (uint8_t i = 0; i < ARRAY_LENGTH(layers) - 1; i++)
 		{
 			if (layers[i]->priority > layers[i + 1]->priority)
 			{
@@ -35,10 +35,10 @@ void generate_keymap(struct layer *layers[])
 		for (uint8_t j = 0; j < COLUMNS; j++)
 		{
 			//currentKeymap[i][j] = {0x0, NULL};
-			for (uint8_t k = 0; k < sizeof(*layers); k++)
+			for (uint8_t k = 0; k < ARRAY_LENGTH(layers); k++)
 			{
 				if (layers[k]->keymap[i][j].keycode != 0x0
-				&& layers[k]->keymap[i][j].function != NULL)
+				|| layers[k]->keymap[i][j].function != NULL)
 				{
 					currentKeymap[i][j] = layers[k]->keymap[i][j];
 				}

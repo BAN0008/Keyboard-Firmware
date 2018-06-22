@@ -1,7 +1,7 @@
 #include "keyboard_settings.h"
 
-uint8_t row_pins[ROWS] = {0, 1, 2, 3};
-uint8_t column_pins[COLUMNS] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16};
+uint8_t row_pins[ROWS] = {0, 1, 2};
+uint8_t column_pins[COLUMNS] = {4, 5, 6};
 
 struct layer normal =
 {

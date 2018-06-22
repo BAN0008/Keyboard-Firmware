@@ -1,8 +1,18 @@
 #include "debug.h"
 #include <stdio.h>
-#include <string.h>
+#include <signal.h>
 
-void pinMode(uint8_t pin, uint8_t mode) {}
+void pinMode(uint8_t pin, uint8_t mode)
+{
+	if (pin < VIRTUAL_PIN_NUMBER)
+	{
+		virtualPins[pin].mode = mode;
+	}
+	else
+	{
+		printf("\x1b[31mERROR: pinMode on NON EXISTING PIN pin\x1b[0m\n");
+	}
+}
 
 void Keyboard_begin()
 {
@@ -28,7 +38,7 @@ bool virtualMatrix[ROWS][COLUMNS] = {false};
 //Updates virtualPins based on the state of virtualMatrix
 void virtualMatrixStep()
 {
-	for (uint8_t i = 0; i < sizeof(virtualPins); i++)
+	for (uint8_t i = 0; i < ARRAY_LENGTH(virtualPins); i++)
 	{
 		if (virtualPins[i].mode == INPUT || virtualPins[i].mode == INPUT_PULLUP)
 		{
@@ -37,7 +47,7 @@ void virtualMatrixStep()
 	}
 	for (uint8_t i = 0; i < ROWS; i++)
 	{
-		if (virtualPins[row_pins[i]].state)
+		if (virtualPins[row_pins[i]].state == HIGH)
 		{
 			for (uint8_t j = 0; j < COLUMNS; j++)
 			{
@@ -58,7 +68,8 @@ void digitalWrite(uint8_t pin, bool signal)
 	}
 	else
 	{
-		printf(strcat(strcat(strcat(ANSI_COLOUR_RED, "ERROR: digitalWrite on INPUT pin"), ANSI_COLOUR_RESET), "\n"));
+		printf("\x1b[31mERROR: digitalWrite on INPUT pin\x1b[0m\n");
+		raise(SIGINT);
 	}
 }
 
@@ -71,6 +82,7 @@ bool digitalRead(uint8_t pin)
 	}
 	else
 	{
-		printf(strcat(strcat(strcat(ANSI_COLOUR_RED, "ERROR: digitalRead on OUTPUT pin"), ANSI_COLOUR_RESET), "\n"));
+		printf("\x1b[31mERROR: digitalRead on OUTPUT pin\x1b[0m\n");
+		raise(SIGINT);
 	}
 }

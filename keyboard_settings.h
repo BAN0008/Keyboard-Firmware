@@ -2,8 +2,8 @@
 #define KEYBOARD_SETTINGS_H
 
 //Define matrix
-#define ROWS 4
-#define COLUMNS 12
+#define ROWS 3
+#define COLUMNS 3
 
 #include <stdint.h>
 #include <stdlib.h>

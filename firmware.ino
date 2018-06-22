@@ -23,6 +23,10 @@ void setup()
 		pinMode(column_pins[i], INPUT_PULLUP);
 	}
 
+	//Populate `currentKeymap`
+	struct layer *temp[1] = {&normal};
+	generate_keymap(temp);
+
 	#ifdef STARTUP_DELAY
 		delay(STARTUP_DELAY);
 	#endif
@@ -104,11 +108,11 @@ int main()
 			scanf(" %u",&column);
 			if (command == 'p')
 			{
-				virtualMatrix[row][column] = true;
+				virtualMatrix[row - 1][column - 1] = true;
 			}
 			if (command == 'r')
 			{
-				virtualMatrix[row][column] = false;
+				virtualMatrix[row - 1][column - 1] = false;
 			}
 		}
 		printf("\nContinuing\n");

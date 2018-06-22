@@ -7,8 +7,6 @@
 
 #define VIRTUAL_PIN_NUMBER 27
 
-#define ANSI_COLOUR_RED     "\x1b[31m"
-#define ANSI_COLOUR_RESET   "\x1b[0m"
 #define OUTPUT 0
 #define INPUT 1
 #define INPUT_PULLUP 2
