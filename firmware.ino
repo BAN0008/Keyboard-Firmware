@@ -84,21 +84,34 @@ void loop()
 #ifdef DEBUG
 int main()
 {
-	bool virtualMatrix[ROWS][COLUMNS] = {false};
-
 	setup();
 	char command;
 	uint8_t row;
 	uint8_t column;
 	while (true)
 	{
-		printf("\n\np/r[Press/Release]: ");
-		scanf(" %c",&command);
-		printf("Row: ");
-		scanf(" %u",&row);
-		printf("Column: ");
-		scanf(" %u",&column);
-		virtualMatrix[row][column] = (command == 'p');
+		while (true)
+		{
+			printf("\n\np/r/c[Press/Release/Continue]: ");
+			scanf(" %c",&command);
+			if (command == 'c')
+			{
+				break;
+			}
+			printf("Row: ");
+			scanf(" %u",&row);
+			printf("Column: ");
+			scanf(" %u",&column);
+			if (command == 'p')
+			{
+				virtualMatrix[row][column] = true;
+			}
+			if (command == 'r')
+			{
+				virtualMatrix[row][column] = false;
+			}
+		}
+		printf("\nContinuing\n");
 		loop();
 	}
 	return 0;

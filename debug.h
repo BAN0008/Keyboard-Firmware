@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "keyboard_settings.h"
 
 #define VIRTUAL_PIN_NUMBER 27
 
@@ -27,6 +28,9 @@ struct pin
 };
 
 extern struct pin virtualPins[VIRTUAL_PIN_NUMBER];
+extern bool virtualMatrix[ROWS][COLUMNS];
+
+void virtualMatrixStep();
 
 void digitalWrite(uint8_t pin, bool signal);
 bool digitalRead(uint8_t pin);
