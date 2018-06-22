@@ -29,6 +29,7 @@ const uint8_t column_pins[COLUMNS] = {4, 5, 6};
 ```
 ### Layers
 There must be at least one layer for the keyboard to function.
+
 |Tag               |Description|
 | ---------------- | --------- |
 |[LAYER_NAME]      |Name of the layer(can't contain spaces)|
