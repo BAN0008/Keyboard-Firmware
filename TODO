@@ -3,6 +3,5 @@ Ensure that the keycode 0x0 isn't used for anything
 Add debouncing algorithm
 Make stuff const
 Test debug error colouring
-Add a continue option to the test loop so that multiple keys can be changed at once
 Make sure that characters in layer definitions are sent as keycodes properly
-Ensur that initializing arrays with int array[128] = {0}; correctly initializes all indexes
+Ensure that initializing arrays with int array[128] = {0}; correctly initializes all indexes
