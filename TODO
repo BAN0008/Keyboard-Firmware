@@ -6,3 +6,5 @@ Test debug error colouring
 Make sure that characters in layer definitions are sent as keycodes properly
 Ensure that initializing arrays with int array[128] = {0}; correctly initializes all indexes
 Use PROGMEM for storing layers(Remember to update the docs too)
+Implement functions in debug.h:
+	delay()
