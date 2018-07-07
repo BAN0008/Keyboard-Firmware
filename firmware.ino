@@ -27,6 +27,7 @@ void setup()
 	struct layer *temp[1] = {&layer_default};
 	generate_keymap(temp);
 
+	//See `keyboard_settings.h`
 	#ifdef STARTUP_DELAY
 		delay(STARTUP_DELAY);
 	#endif
@@ -85,6 +86,7 @@ void loop()
 	}
 }
 
+//If `DEBUG` is defined use the following main function
 #ifdef DEBUG
 int main()
 {
@@ -97,15 +99,15 @@ int main()
 		while (true)
 		{
 			printf("\n\np/r/c[Press/Release/Continue]: ");
-			scanf(" %c",&command);
+			scanf("%c",&command);
 			if (command == 'c')
 			{
 				break;
 			}
 			printf("Row: ");
-			scanf(" %u",&row);
+			scanf("%hhu", &row);
 			printf("Column: ");
-			scanf(" %u",&column);
+			scanf("%hhu",&column);
 			if (command == 'p')
 			{
 				virtualMatrix[row - 1][column - 1] = true;
