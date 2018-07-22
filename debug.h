@@ -31,6 +31,7 @@ void initialize_virtual_pins()
 	static bool initialized = false;
 	if (!initialized)
 	{
+		printf("\x1b[32mINFO: Initializing Virtual Pins\x1b[0m\n");
 		for (uint8_t i = 0; i < PIN_COUNT; i++)
 		{
 			virtual_pins[i].mode = INPUT;
