@@ -4,26 +4,36 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MATRIX_ROWS		4
-#define MATRIX_COLUMNS	12
+#define MATRIX_ROWS		5
+#define MATRIX_COLUMNS	17
 
-const uint8_t row_pins[MATRIX_ROWS]			= {0, 1, 2, 3};
-const uint8_t column_pins[MATRIX_COLUMNS]	= {4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16};
+const uint8_t row_pins[MATRIX_ROWS]			= {0, 1, 2, 3, 4};
+const uint8_t column_pins[MATRIX_COLUMNS]	= {5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 21, 22, 23};
 
 struct matrix_key
 {
-	uint8_t id;
-	uint8_t id_when_pressed;
-	bool pressed;
+	uint8_t keycode;
+	uint8_t keycode_when_pressed;
+	bool 	pressed;
 };
 typedef struct matrix_key matrix_key;
 
-matrix_key matrix[MATRIX_ROWS][MATRIX_COLUMNS] =
+uint8_t main_layer[MATRIX_ROWS][MATRIX_COLUMNS]
 {
-	{{0x00}, {'q'}, {'w'}, {'e'}, {'r'}, {'t'}, {'y'}, {'u'}, {'i'}, {'o'}, {'p'}, {0x00}},
-	{{0x00}, {'a'}, {'s'}, {'d'}, {'f'}, {'g'}, {'h'}, {'j'}, {'k'}, {'l'}, {';'}, {'\''}},
-	{{0x00}, {'z'}, {'x'}, {'c'}, {'v'}, {'b'}, {'n'}, {'m'}, {','}, {'.'}, {'/'}, {0x00}},
-	{{0x00}, {0x0}, {0x0}, {0x0}, {0x0}, {' '}, {' '}, {0x0}, {0x0}, {0x0}, {0x0}, {0x00}}
+	{'`',            '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '=', KEY_BACKSPACE, 0x0, 0x0, 0x0, 0x0},
+	{KEY_TAB,        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 0x0, 0x0, 0x0, 0x0},
+	{KEY_CAPSLOCK,   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', KEY_RETURN, 0x0, 0x0, 0x0, 0x0},
+	{KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT, 0x0, 0x0, 0x0, 0x0, 0x0},
+	{KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, ' ', KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+};
+
+uint8_t function_layer[MATRIX_ROWS][MATRIX_COLUMNS]
+{
+	{KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, 0x0, 0x0, 0x0},
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+	{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
 };
 
 #endif //_FIRMWARE_H
