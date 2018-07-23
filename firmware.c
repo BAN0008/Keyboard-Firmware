@@ -8,7 +8,10 @@ void change_layer(bool pressed)
 		{
 			if (pressed)
 			{
-				matrix[row][column].keycode = function_layer[row][column];
+				if (function_layer[row][column] != 0x0)
+				{
+					matrix[row][column].keycode = function_layer[row][column];
+				}
 			}
 			else
 			{

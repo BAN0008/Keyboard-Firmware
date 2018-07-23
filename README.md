@@ -1,31 +1,29 @@
-#ifndef _FIRMWARE_H
-#define _FIRMWARE_H
+# Keyboard Firmware
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+## Compiling
+Run ```gcc -g -D DEBUG -o firmware firmware.c``` to compile a version which can be run in a terminal without a microcontroller.
 
+Run with ```./firmware```
+
+## Compiling for a microcontroller
+- Copy files to a folder titled ```firmware```
+- Rename ```firmware.c``` to ```firmware.ino```
+- Delete debug.h
+- Open in the Arduino IDE and compile/upload
+
+## Setting up the matrix
+```c
+//firmware.h
+//Specify the number of rows and columns in the matrix
 #define MATRIX_ROWS		5
 #define MATRIX_COLUMNS	17
 
-const uint8_t row_pins[MATRIX_ROWS]       = {0, 1, 2, 3, 4};
-const uint8_t column_pins[MATRIX_COLUMNS] = {5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22};
+//Specify which pins are used for the columns and rows
+const uint8_t row_pins[MATRIX_ROWS]       = {0, 1, 2, 3, 4};                                                 //0 = Top row, 4 = Bottom row
+const uint8_t column_pins[MATRIX_COLUMNS] = {5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22}; //5 = Leftmost column, 22 = Rightmost column
 
-#ifdef DEBUG
-	#include "debug.h"
-#endif
-
-struct matrix_key
-{
-	uint8_t keycode;
-	uint8_t keycode_when_pressed;
-	void    (*function)(bool pressed);
-	bool 	pressed;
-};
-typedef struct matrix_key matrix_key;
-
-matrix_key matrix[MATRIX_ROWS][MATRIX_COLUMNS];
-
+//Set keymaps for layers
+//0x0 stops a key from sending a keycode and stops it from overriding other layers
 const uint8_t main_layer[MATRIX_ROWS][MATRIX_COLUMNS] =
 {
 	{'`',            '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '=', KEY_BACKSPACE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP},
@@ -44,4 +42,4 @@ const uint8_t function_layer[MATRIX_ROWS][MATRIX_COLUMNS] =
 	{0x0, 0x0/*FN Key*/, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
 };
 
-#endif //_FIRMWARE_H
+```
