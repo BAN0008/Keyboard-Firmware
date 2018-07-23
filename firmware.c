@@ -1,9 +1,5 @@
 #include "firmware.h"
 
-#ifdef DEBUG
-	#include "debug.h"
-#endif
-
 int main()
 {
 	//Initialize Pins
@@ -16,6 +12,17 @@ int main()
 		pinMode(column_pins[column], INPUT);
 	}
 
+	//Populate current keymap
+	matrix_key matrix[MATRIX_ROWS][MATRIX_COLUMNS];
+	for (uint8_t row = 0; row < MATRIX_ROWS; row++)
+	{
+		for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
+		{
+			matrix[row][column].keycode = main_layer[row][column];
+		}
+	}
+
+	//Main Loop
 	while (true)
 	{
 		#ifdef DEBUG
@@ -26,13 +33,19 @@ int main()
 			digitalWrite(row_pins[row], true);
 			for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
 			{
-				if (digitalRead(column_pins[column]))
+				bool key_pressed = digitalRead(column_pins[column]);
+				if (key_pressed != matrix[row][column].pressed)
 				{
-
-				}
-				else
-				{
-
+					matrix[row][column].pressed = key_pressed;
+					if (key_pressed)
+					{
+						Keyboard.press(matrix[row][column].keycode);
+						matrix[row][column].keycode_when_pressed = matrix[row][column].keycode;
+					}
+					else
+					{
+						Keyboard.release(matrix[row][column].keycode_when_pressed);
+					}
 				}
 			}
 			digitalWrite(row_pins[row], false);
