@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include <string.h>
 
 #define PIN_COUNT 24
@@ -57,13 +58,12 @@
 struct virtual_pin
 {
 	uint8_t mode;
-	bool state;
+	bool    state;
 };
 
 struct virtual_pin virtual_pins[PIN_COUNT];
-bool virtual_matrix[MATRIX_ROWS][MATRIX_COLUMNS] = {false};
-
-bool keyboard_began = false;
+bool   virtual_matrix[MATRIX_ROWS][MATRIX_COLUMNS] = {false};
+bool   keyboard_began = false;
 
 void initialize_virtual_pins()
 {
@@ -96,6 +96,11 @@ void simulate_matrix()
 			}
 		}
 	}
+}
+
+void delay(int milliseconds)
+{
+	usleep(milliseconds * 1000);
 }
 
 void pinMode(uint8_t pin, uint8_t mode)
@@ -164,7 +169,7 @@ void Keyboard_press(uint8_t keycode)
 	{
 		printf("\x1b[1;33mWARNING: \x1b[34m`Keyboard.press()`\x1b[1;33m called before \x1b[34m`Keyboard.begin()`\x1b[0m\n");
 	}
-	printf("\x1b[35mPressing key \x1b[34m0x%x\x1b[0m\n", keycode);
+	printf("\x1b[35mPressing key \x1b[34m0x%x/%c\x1b[0m\n", keycode, keycode);
 }
 void Keyboard_release(uint8_t keycode)
 {
@@ -172,7 +177,7 @@ void Keyboard_release(uint8_t keycode)
 	{
 		printf("\x1b[1;33mWARNING: \x1b[34m`Keyboard.release()`\x1b[1;33m called before \x1b[34m`Keyboard.begin()`\x1b[0m\n");
 	}
-	printf("\x1b[35mReleasing key \x1b[34m0x%x\x1b[0m\n", keycode);
+	printf("\x1b[35mReleasing key \x1b[34m0x%x/%c\x1b[0m\n", keycode, keycode);
 }
 
 void debug_prompt()

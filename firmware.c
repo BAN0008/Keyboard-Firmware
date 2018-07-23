@@ -1,5 +1,23 @@
 #include "firmware.h"
 
+void change_layer(bool pressed)
+{
+	for (uint8_t row = 0; row < MATRIX_ROWS; row++)
+	{
+		for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
+		{
+			if (pressed)
+			{
+				matrix[row][column].keycode = function_layer[row][column];
+			}
+			else
+			{
+				matrix[row][column].keycode = main_layer[row][column];
+			}
+		}
+	}
+}
+
 int main()
 {
 	//Initialize Pins
@@ -13,14 +31,24 @@ int main()
 	}
 
 	//Populate current keymap
-	matrix_key matrix[MATRIX_ROWS][MATRIX_COLUMNS];
 	for (uint8_t row = 0; row < MATRIX_ROWS; row++)
 	{
 		for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
 		{
+			matrix[row][column].pressed = false;
 			matrix[row][column].keycode = main_layer[row][column];
+			matrix[row][column].function = NULL;
 		}
 	}
+
+	//Setup FN Key
+	matrix[4][1].function = &change_layer;
+
+	//Uncomment if the keyboard is occasionally not recognized
+	//delay(2500);
+
+	//Setup keyboard as HID device
+	Keyboard.begin();
 
 	//Main Loop
 	while (true)
@@ -39,12 +67,26 @@ int main()
 					matrix[row][column].pressed = key_pressed;
 					if (key_pressed)
 					{
-						Keyboard.press(matrix[row][column].keycode);
-						matrix[row][column].keycode_when_pressed = matrix[row][column].keycode;
+						if (matrix[row][column].keycode != 0x0)
+						{
+							Keyboard.press(matrix[row][column].keycode);
+							matrix[row][column].keycode_when_pressed = matrix[row][column].keycode;
+						}
+						if (matrix[row][column].function != NULL)
+						{
+							matrix[row][column].function(true);
+						}
 					}
 					else
 					{
-						Keyboard.release(matrix[row][column].keycode_when_pressed);
+						if (matrix[row][column].keycode_when_pressed != 0x0)
+						{
+							Keyboard.release(matrix[row][column].keycode_when_pressed);
+						}
+						if (matrix[row][column].function != NULL)
+						{
+							matrix[row][column].function(false);
+						}
 					}
 				}
 			}
