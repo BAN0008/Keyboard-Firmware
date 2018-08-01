@@ -4,15 +4,6 @@
 	#include "debug.h"
 #endif
 
-void pin_write(uint8_t pin, bool state)
-{
-	digitalWrite(pin, state);
-}
-bool pin_read(uint8_t pin)
-{
-	return digitalRead(pin);
-}
-
 void calibrate_pins()
 {
 	struct calibration_pin
@@ -41,37 +32,52 @@ void calibrate_pins()
 	for (uint8_t row = 0; row < MATRIX_ROWS; row++)
 	{
 		char buffer[64];
-		sprintf(buffer, "Initializing %d", row + 1);
+		sprintf(buffer, "Initializing Row %d", row + 1);
 		Serial.println(buffer);
+
+		#ifdef DEBUG
+			debug_prompt();
+		#endif
+
 		for (uint8_t possible_pin = 0; possible_pin < MATRIX_ROWS + MATRIX_COLUMNS; possible_pin++)
 		{
 			if (!pins[possible_pin].used)
 			{
-				for (uint8_t pin_iterator1 = 0; pin_iterator1 < MATRIX_ROWS + MATRIX_COLUMNS; pin_iterator1++)
+				for (uint8_t pin_iterator = 0; pin_iterator < MATRIX_ROWS + MATRIX_COLUMNS; pin_iterator++)
 				{
-					pinMode(pins[pin_iterator1].id, INPUT);
+					pinMode(pins[pin_iterator].id, INPUT);
 				}
 				pinMode(pins[possible_pin].id, OUTPUT);
-				pin_write(pins[possible_pin].id, HIGH);
+				digitalWrite(pins[possible_pin].id, HIGH);
 
-				while (!pins[possible_pin].used)
+				for (uint8_t pin_iterator = 0; pin_iterator < MATRIX_ROWS + MATRIX_COLUMNS; pin_iterator++)
 				{
-					#ifdef DEBUG
-						debug_prompt();
-					#endif
-					for (uint8_t pin_iterator2 = 0; pin_iterator2 < MATRIX_ROWS + MATRIX_COLUMNS; pin_iterator2++)
+					if (pin_iterator != possible_pin && digitalRead(pins[pin_iterator].id))
 					{
-						if (possible_pin != pin_iterator2)
-						{
-							if (pin_read(pins[pin_iterator2].id))
-							{
-								pins[possible_pin].used = true;
-								row_pins[row] = pins[possible_pin].id;
-							}
-						}
+						pins[possible_pin].used = true;
+						row_pins[row] = pins[possible_pin].id;
+						sprintf(buffer, "Setting to %hhu", pins[possible_pin].id);
+						Serial.println(buffer);
 					}
 				}
 			}
+		}
+	}
+
+	//Calibrate Column Pins
+	for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
+	{
+		char buffer[64];
+		sprintf(buffer, "Initializing Column %d", row + 1);
+		Serial.println(buffer);
+
+		#ifdef DEBUG
+			debug_prompt();
+		#endif
+
+		for (uint8_t possible_pin = 0; possible_pin < MATRIX_ROWS + MATRIX_COLUMNS; possible_pin++)
+		{
+			
 		}
 	}
 	Serial.println("Finished Calibration");
@@ -100,10 +106,10 @@ int main()
 		#endif
 		for (uint8_t row = 0; row < MATRIX_ROWS; row++)
 		{
-			pin_write(row_pins[row], true);
+			digitalWrite(row_pins[row], true);
 			for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
 			{
-				if (pin_read(column_pins[column]))
+				if (digitalRead(column_pins[column]))
 				{
 
 				}
@@ -112,7 +118,7 @@ int main()
 
 				}
 			}
-			pin_write(row_pins[row], false);
+			digitalWrite(row_pins[row], false);
 		}
 	}
 }

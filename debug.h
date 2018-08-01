@@ -113,6 +113,10 @@ void pinMode(uint8_t pin, uint8_t mode)
 	{
 		printf("\x1b[32mINFO: Setting mode of pin \x1b[34m`%hhu`\x1b[32m to \x1b[34m`%s`\x1b[32m\x1b[0m\n", pin, modes[mode]);
 		virtual_pins[pin].mode = mode;
+		if (mode != 0)
+		{
+			virtual_pins[pin].state = LOW;
+		}
 	}
 	else
 	{
@@ -296,7 +300,7 @@ void EEPROM_update(uint16_t address, uint8_t value)
 
 void debug_prompt()
 {
-	static bool ignore_debug_prompt = false;
+	static bool ignore_debug_prompt = false; //This variable is meant to be set manually through a debugger
 	if (!ignore_debug_prompt)
 	{
 		char command;
