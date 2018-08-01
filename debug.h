@@ -197,7 +197,7 @@ void Serial_end()
 	serial_began = false;
 	printf("\x1b[32mINFO: \x1b[34m`Serial.end()`\x1b[1;32m called\x1b[0m\n");
 }
-size_t Serial_println(char *val)
+size_t Serial_println(char *value)
 {
 	if (!serial_began)
 	{
@@ -206,8 +206,8 @@ size_t Serial_println(char *val)
 	}
 	else
 	{
-		printf("\x1b[35mSerial print \x1b[34m`%s`\x1b[0m\n", val);
-		return strlen(val);
+		printf("\x1b[35mSerial print \x1b[34m`%s`\x1b[0m\n", value);
+		return strlen(value);
 	}
 }
 uint8_t Serial_read()
@@ -262,80 +262,116 @@ size_t Serial_write(uint8_t bytes[])
 	}
 }
 
+uint8_t EEPROM_read(uint16_t address)
+{
+	FILE *eeprom_file;
+	eeprom_file = fopen("eeprom.bin", "r");
+	fseek(eeprom_file, address, 0);
+	uint8_t buffer;
+	fread(&buffer, 1, 1, eeprom_file);
+	return buffer;
+	fclose(eeprom_file);
+}
+void EEPROM_write(uint16_t address, uint8_t value)
+{
+	FILE *eeprom_file;
+	eeprom_file = fopen("eeprom.bin", "r+");
+	fseek(eeprom_file, address, 0);
+	uint8_t buffer[1] = {value};
+	fwrite(&buffer, 1, 1, eeprom_file);
+	fclose(eeprom_file);
+	printf("\x1b[1;33mWARNING: EEPROMs usually only have about 100,000 write/erase cycles so use this function sparingly\x1b[0m\n");
+	printf("\x1b[1;33mWARNING: In most cases you should be using EEPROM.update() only use this function to prolong the lifespan of data\x1b[0m\n");
+}
+void EEPROM_update(uint16_t address, uint8_t value)
+{
+	FILE *eeprom_file;
+	eeprom_file = fopen("eeprom.bin", "r+");
+	fseek(eeprom_file, address, 0);
+	uint8_t buffer[1] = {value};
+	fwrite(&buffer, 1, 1, eeprom_file);
+	fclose(eeprom_file);
+	printf("\x1b[1;33mWARNING: EEPROMs usually only have about 100,000 write/erase cycles so use this function sparingly\x1b[0m\n");
+}
+
 void debug_prompt()
 {
-	char command;
-	bool done = false;
-	uint8_t row, column;
-	while (!done)
+	static bool ignore_debug_prompt = false;
+	if (!ignore_debug_prompt)
 	{
-		printf("\x1b[0mCommand > \x1b[35m");
-		//scanf(" %c", &command);
-		//scanf(" %c %hhu %hhu", &command, &row, &column);
-		char *line = malloc(16);
-		fgets(line, 16, stdin);
-		line = strtok(line, "\n");
-		uint8_t args = 1;
-		for (uint8_t i = 0; i < 16; i++)
+		char command;
+		bool done = false;
+		uint8_t row, column;
+		while (!done)
 		{
-			if (line[i] == ' ')
+			printf("\x1b[0mCommand > \x1b[35m");
+			//scanf(" %c", &command);
+			//scanf(" %c %hhu %hhu", &command, &row, &column);
+			char *line = malloc(16);
+			fgets(line, 16, stdin);
+			line = strtok(line, "\n");
+			uint8_t args = 1;
+			for (uint8_t i = 0; i < 16; i++)
 			{
-				args++;
+				if (line[i] == ' ')
+				{
+					args++;
+				}
+			}
+			command = strtok(line, " ")[0];
+			if (args == 3)
+			{
+				row = atoi(strtok(NULL, " "));
+				column = atoi(strtok(NULL, " "));
+			}
+
+			switch (command)
+			{
+				case 'h':
+					printf("h - Print list of commands\nc - Continue\np <ROW> <COLUMN> - Press a key\nr <ROW> <COLUMN> - Release a key\nq - Quit\n\n");
+					break;
+				case 'q':
+					exit(0);
+					break;
+				case 'c':
+					done = true;
+					break;
+				case 'p':
+					/*
+					printf("\x1b[0m    Row > \x1b[35m");
+					scanf(" %hhu", &row);
+					printf("\x1b[0m Column > \x1b[35m");
+					scanf(" %hhu", &column);
+					*/
+					if (row <= MATRIX_ROWS && column <= MATRIX_COLUMNS && row > 0 && column > 0)
+					{
+						virtual_matrix[row - 1][column - 1] = true;
+					}
+					else
+					{
+						printf("\x1b[31mERROR: Key out of bounds. Matrix size is %dx%d\n", MATRIX_ROWS, MATRIX_COLUMNS);
+					}
+					break;
+				case 'r':
+					/*
+					printf("\x1b[0m    Row > \x1b[35m");
+					scanf(" %hhu", &row);
+					printf("\x1b[0m Column > \x1b[35m");
+					scanf(" %hhu", &column);
+					*/
+					if (row <= MATRIX_ROWS && column <= MATRIX_COLUMNS && row > 0 && column > 0)
+					{
+						virtual_matrix[row - 1][column - 1] = false;
+					}
+					else
+					{
+						printf("\x1b[31mERROR: Key out of bounds. Matrix size is %dx%d\n", MATRIX_ROWS, MATRIX_COLUMNS);
+					}
+					break;
 			}
 		}
-		command = strtok(line, " ")[0];
-		if (args == 3)
-		{
-			row = atoi(strtok(NULL, " "));
-			column = atoi(strtok(NULL, " "));
-		}
-
-		switch (command)
-		{
-			case 'h':
-				printf("h - Print list of commands\nc - Continue\np <ROW> <COLUMN> - Press a key\nr <ROW> <COLUMN> - Release a key\nq - Quit\n\n");
-				break;
-			case 'q':
-				exit(0);
-				break;
-			case 'c':
-				done = true;
-				break;
-			case 'p':
-				/*
-				printf("\x1b[0m    Row > \x1b[35m");
-				scanf(" %hhu", &row);
-				printf("\x1b[0m Column > \x1b[35m");
-				scanf(" %hhu", &column);
-				*/
-				if (row <= MATRIX_ROWS && column <= MATRIX_COLUMNS && row > 0 && column > 0)
-				{
-					virtual_matrix[row - 1][column - 1] = true;
-				}
-				else
-				{
-					printf("\x1b[31mERROR: Key out of bounds. Matrix size is %dx%d\n", MATRIX_ROWS, MATRIX_COLUMNS);
-				}
-				break;
-			case 'r':
-				/*
-				printf("\x1b[0m    Row > \x1b[35m");
-				scanf(" %hhu", &row);
-				printf("\x1b[0m Column > \x1b[35m");
-				scanf(" %hhu", &column);
-				*/
-				if (row <= MATRIX_ROWS && column <= MATRIX_COLUMNS && row > 0 && column > 0)
-				{
-					virtual_matrix[row - 1][column - 1] = false;
-				}
-				else
-				{
-					printf("\x1b[31mERROR: Key out of bounds. Matrix size is %dx%d\n", MATRIX_ROWS, MATRIX_COLUMNS);
-				}
-				break;
-		}
+		printf("\x1b[0m");
 	}
-	printf("\x1b[0m");
 }
 
 const struct
@@ -350,11 +386,18 @@ const struct
 {
 	void    (*begin)(uint32_t speed);
 	void    (*end)(void);
-	size_t  (*print)(char *val);
-	size_t  (*println)(char *val);
+	size_t  (*print)(char *value);
+	size_t  (*println)(char *value);
 	uint8_t (*read)(void);
 	char *  (*readStringUntil)(char terminator);
 	size_t  (*write)(uint8_t bytes[]);
 } Serial = {&Serial_begin, &Serial_end, &Serial_println, &Serial_println, &Serial_read, &Serial_readStringUntil, &Serial_write};
+
+const struct
+{
+	uint8_t (*read)(uint16_t address);
+	void    (*write)(uint16_t address, uint8_t value);
+	void    (*update)(uint16_t address, uint8_t value);
+} EEPROM = {&EEPROM_read, &EEPROM_write, &EEPROM_update};
 
 #endif //_DEBUG_H
