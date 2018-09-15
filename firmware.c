@@ -32,7 +32,7 @@ void main()
 	for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
 	{
 		pinMode(column_pins[column], INPUT_PULLUP);
-		digitalWrite(column_pins[column], HIGH)
+		digitalWrite(column_pins[column], HIGH);
 	}
 
 	//Populate current keymap
