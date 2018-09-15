@@ -1,6 +1,7 @@
 # Keyboard Firmware
 
-## Clone with ```git clone -b milo --single-branch https://github.com/BAN0008/Keyboard-Firmware.git```
+## Cloning
+Clone with ```git clone -b milo --single-branch https://github.com/BAN0008/Keyboard-Firmware.git```
 
 ## Compiling
 Run ```gcc -g -D DEBUG -o firmware firmware.c``` to compile a version which can be run in a terminal without a microcontroller.
