@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define MATRIX_ROWS		5
+#define MATRIX_ROWS	5
 #define MATRIX_COLUMNS	17
 
 const uint8_t row_pins[MATRIX_ROWS]       = {0, 1, 2, 3, 4};

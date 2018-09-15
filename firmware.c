@@ -21,16 +21,18 @@ void change_layer(bool pressed)
 	}
 }
 
-int main()
+void main()
 {
 	//Initialize Pins
 	for (uint8_t row = 0; row < MATRIX_ROWS; row++)
 	{
-		pinMode(row_pins[row], OUTPUT);
+		pinMode(row_pins[row],      OUTPUT);
+		digitalWrite(row_pins[row], HIGH);
 	}
 	for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
 	{
-		pinMode(column_pins[column], INPUT);
+		pinMode(column_pins[column], INPUT_PULLUP);
+		digitalWrite(column_pins[column], HIGH)
 	}
 
 	//Populate current keymap
@@ -61,10 +63,10 @@ int main()
 		#endif
 		for (uint8_t row = 0; row < MATRIX_ROWS; row++)
 		{
-			digitalWrite(row_pins[row], true);
+			digitalWrite(row_pins[row], LOW);
 			for (uint8_t column = 0; column < MATRIX_COLUMNS; column++)
 			{
-				bool key_pressed = digitalRead(column_pins[column]);
+				bool key_pressed = !digitalRead(column_pins[column]);
 				if (key_pressed != matrix[row][column].pressed)
 				{
 					matrix[row][column].pressed = key_pressed;
@@ -93,7 +95,7 @@ int main()
 					}
 				}
 			}
-			digitalWrite(row_pins[row], false);
+			digitalWrite(row_pins[row], HIGH);
 		}
 	}
 }
