@@ -18,7 +18,7 @@ Run with ```./firmware```
 ```c
 //firmware.h
 //Specify the number of rows and columns in the matrix
-#define MATRIX_ROWS		5
+#define MATRIX_ROWS	5
 #define MATRIX_COLUMNS	17
 
 //Specify which pins are used for the columns and rows
